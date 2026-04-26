@@ -2,3 +2,6 @@ project_id = "nhrjaqjgtavmipotvlhw"
 
 [functions.generate-experiment]
 verify_jwt = true
+
+[functions.enhance-hypothesis]
+verify_jwt = true

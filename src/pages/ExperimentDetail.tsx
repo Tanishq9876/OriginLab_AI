@@ -203,7 +203,7 @@ export default function ExperimentDetail() {
             {row.title ?? "Generating plan…"}
           </h1>
 
-          <div className="mt-4 max-w-3xl rounded-md border border-border bg-surface-1 p-4">
+          <div className="mt-4 w-full rounded-md border border-border bg-surface-1 p-4">
             <div className="mb-1 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
               Hypothesis
             </div>

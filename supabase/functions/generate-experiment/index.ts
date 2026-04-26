@@ -527,7 +527,6 @@ Deno.serve(async (req: Request) => {
       },
       body: JSON.stringify({
         model: MODEL,
-        reasoning: { effort: "high" },
         messages: [
           { role: "system", content: buildSystemPrompt(countryCode) },
           {

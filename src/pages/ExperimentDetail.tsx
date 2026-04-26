@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { PlanView } from "@/components/plan/PlanView";
+import { DiscussionPanel } from "@/components/discussion/DiscussionPanel";
 import type { ExperimentPlan } from "@/types/experiment";
 import {
   ArrowLeft,
@@ -180,6 +181,10 @@ export default function ExperimentDetail() {
       )}
 
       {row.status === "complete" && row.plan && <PlanView plan={row.plan} />}
+
+      {row.status === "complete" && (
+        <DiscussionPanel experimentId={row.id} plan={row.plan} />
+      )}
     </section>
   );
 }

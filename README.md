@@ -2,7 +2,13 @@
 
 **Transform Scientific Hypotheses into Complete Experiment Blueprints in Minutes**
 
-OriginLab AI is an intelligent platform that converts a single-line scientific hypothesis into a comprehensive, executable experiment blueprint — including detailed protocols, materials list, budget estimation, timeline, validation criteria, and safety considerations — all powered by AI.
+OriginLab AI is an intelligent platform that converts a single-line scientific hypothesis into a comprehensive, executable experiment blueprint — including detailed protocols, materials list, budget estimations, and safety assessments.
+
+## 🌐 Live Demo
+
+**[Try OriginLab AI Now](https://origin-lab-ai.lovable.app/)**
+
+Experience the platform live and see how it transforms your scientific ideas into actionable experiment blueprints in minutes!
 
 ## 🚀 Features
 

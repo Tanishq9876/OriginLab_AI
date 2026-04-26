@@ -20,6 +20,7 @@ import {
   Globe2,
 } from "lucide-react";
 import { toast } from "sonner";
+import { HypothesisEnhancer } from "@/components/HypothesisEnhancer";
 
 const COUNTRIES = [
   { code: "US", label: "United States" },
@@ -136,6 +137,12 @@ export default function NewExperiment() {
             <span>State the variable you change and the outcome you measure.</span>
             <span className="font-mono">{hypothesis.length}/4000</span>
           </div>
+
+          <HypothesisEnhancer
+            hypothesis={hypothesis}
+            disabled={submitting}
+            onUseEnhanced={(refined) => setHypothesis(refined)}
+          />
         </div>
 
         <div className="space-y-2">

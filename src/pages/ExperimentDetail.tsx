@@ -12,9 +12,11 @@ import {
   Download,
   Printer,
   Calendar,
+  FileText,
 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { generatePdfReport, type CommentForReport, type AiInsights } from "@/lib/report/generatePdfReport";
 
 type ExperimentRow = {
   id: string;
@@ -35,6 +37,7 @@ export default function ExperimentDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [row, setRow] = useState<ExperimentRow | null | undefined>(undefined);
+  const [generatingReport, setGeneratingReport] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -79,7 +82,7 @@ export default function ExperimentDetail() {
   }
 
   const downloadJson = () => {
-    if (!row.plan) return;
+    if (!row?.plan) return;
     const blob = new Blob([JSON.stringify(row.plan, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -87,6 +90,88 @@ export default function ExperimentDetail() {
     a.download = `${(row.title ?? "experiment").replace(/[^a-z0-9]+/gi, "_")}.json`;
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  const downloadPdfReport = async () => {
+    if (!row?.plan) return;
+    setGeneratingReport(true);
+    try {
+      // 1. Fetch all comments + commenter profiles
+      const { data: commentRows, error: cErr } = await supabase
+        .from("experiment_comments")
+        .select("body, created_at, user_id")
+        .eq("experiment_id", row.id)
+        .order("created_at", { ascending: true });
+      if (cErr) throw cErr;
+
+      const userIds = Array.from(new Set((commentRows ?? []).map((c) => c.user_id)));
+      let profileMap: Record<string, string | null> = {};
+      if (userIds.length > 0) {
+        const { data: profs } = await supabase
+          .from("profiles")
+          .select("id, display_name")
+          .in("id", userIds);
+        profileMap = Object.fromEntries((profs ?? []).map((p) => [p.id, p.display_name]));
+      }
+      const comments: CommentForReport[] = (commentRows ?? []).map((c) => ({
+        body: c.body,
+        created_at: c.created_at,
+        display_name: profileMap[c.user_id] ?? null,
+      }));
+
+      // 2. If we have comments, ask the AI assistant to summarize the discussion
+      let ai: AiInsights | null = null;
+      if (comments.length > 0) {
+        try {
+          const { data: aiData, error: aiErr } = await supabase.functions.invoke(
+            "experiment-assistant",
+            {
+              body: {
+                mode: "summary",
+                experimentId: row.id,
+                plan: row.plan,
+                comments: comments.map((c, i) => ({
+                  id: String(i),
+                  author: c.display_name ?? "Anonymous",
+                  body: c.body,
+                  created_at: c.created_at,
+                })),
+              },
+            },
+          );
+          if (!aiErr && aiData) {
+            ai = {
+              consensus: aiData.consensus ?? [],
+              key_points: aiData.key_points ?? [],
+              disagreements: aiData.disagreements ?? [],
+              top_improvements: aiData.top_improvements ?? aiData.improvements ?? [],
+              refined_hypothesis: aiData.refined_hypothesis ?? "",
+            };
+          }
+        } catch (e) {
+          console.warn("AI summary failed, continuing without it", e);
+        }
+      }
+
+      // 3. Generate the PDF
+      const doc = generatePdfReport({
+        title: row.title ?? "Experiment Report",
+        hypothesis: row.hypothesis,
+        feedback: row.feedback,
+        createdAt: row.created_at,
+        plan: row.plan,
+        comments,
+        ai,
+      });
+      const safe = (row.title ?? "experiment_report").replace(/[^a-z0-9]+/gi, "_");
+      doc.save(`${safe}_report.pdf`);
+      toast.success("Report downloaded");
+    } catch (e) {
+      console.error(e);
+      toast.error("Could not generate report");
+    } finally {
+      setGeneratingReport(false);
+    }
   };
 
   return (
@@ -135,8 +220,21 @@ export default function ExperimentDetail() {
 
           {row.status === "complete" && row.plan && (
             <div className="mt-5 flex flex-wrap gap-2 print:hidden">
+              <Button
+                size="sm"
+                onClick={downloadPdfReport}
+                disabled={generatingReport}
+                className="gap-2 bg-gradient-primary text-primary-foreground hover:opacity-90"
+              >
+                {generatingReport ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <FileText className="h-4 w-4" />
+                )}
+                {generatingReport ? "Generating report…" : "Download PDF Report"}
+              </Button>
               <Button variant="outline" size="sm" onClick={downloadJson} className="gap-2">
-                <Download className="h-4 w-4" /> Download JSON
+                <Download className="h-4 w-4" /> JSON
               </Button>
               <Button
                 variant="outline"
@@ -144,7 +242,7 @@ export default function ExperimentDetail() {
                 onClick={() => window.print()}
                 className="gap-2"
               >
-                <Printer className="h-4 w-4" /> Print / PDF
+                <Printer className="h-4 w-4" /> Print
               </Button>
             </div>
           )}

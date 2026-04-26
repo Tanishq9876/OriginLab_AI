@@ -37,6 +37,7 @@ export default function ExperimentDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [row, setRow] = useState<ExperimentRow | null | undefined>(undefined);
+  const [generatingReport, setGeneratingReport] = useState(false);
 
   useEffect(() => {
     if (!id) return;

@@ -22,6 +22,7 @@ type ExperimentRow = {
   country_code: string;
   title: string | null;
   domain: string | null;
+  experiment_type_tag: string | null;
   status: string;
   plan: ExperimentPlan | null;
   error: string | null;
@@ -49,7 +50,7 @@ export default function ExperimentDetail() {
         setRow(null);
         return;
       }
-      setRow(data as ExperimentRow | null);
+      setRow(data as unknown as ExperimentRow | null);
     })();
     return () => {
       cancelled = true;

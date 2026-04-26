@@ -174,7 +174,7 @@ export default function ExperimentDetail() {
           <Loader2 className="h-7 w-7 animate-spin text-primary" />
           <p className="mt-3 font-display text-base font-semibold">Generating your plan…</p>
           <p className="mt-1 text-sm text-muted-foreground">
-            GPT-5 deep reasoning typically takes 30–90 seconds.
+            Deep reasoning typically takes 30–90 seconds.
           </p>
         </div>
       )}

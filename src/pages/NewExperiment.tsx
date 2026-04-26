@@ -39,9 +39,9 @@ const COUNTRIES = [
 
 const EXAMPLES = [
   "Adding 5% DMSO to HeLa cryopreservation media improves post-thaw viability vs 10% glycerol.",
-  "Heat-inactivating SARS-CoV-2 nasal swabs at 65°C for 15 min preserves RT-qPCR Ct values within ±1.",
-  "B. subtilis biofilm formation on stainless steel is reduced ≥50% by 1 mM cinnamaldehyde at 30°C.",
-  "Soil amended with 2% biochar increases tomato seedling biomass by 20% under drought stress.",
+  "B. subtilis biofilm formation on stainless steel coupons is reduced ≥50% by 1 mM cinnamaldehyde at 30°C over 24 h.",
+  "Soil amended with 2% w/w biochar increases tomato seedling biomass by 20% under simulated drought stress.",
+  "Pre-treating mild steel with a 5 mM benzotriazole solution reduces corrosion rate by ≥40% in 3.5% NaCl over 7 days.",
 ];
 
 export default function NewExperiment() {

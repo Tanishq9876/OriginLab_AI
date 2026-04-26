@@ -5,3 +5,6 @@ verify_jwt = true
 
 [functions.enhance-hypothesis]
 verify_jwt = true
+
+[functions.experiment-assistant]
+verify_jwt = false

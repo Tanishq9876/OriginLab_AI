@@ -220,8 +220,21 @@ export default function ExperimentDetail() {
 
           {row.status === "complete" && row.plan && (
             <div className="mt-5 flex flex-wrap gap-2 print:hidden">
+              <Button
+                size="sm"
+                onClick={downloadPdfReport}
+                disabled={generatingReport}
+                className="gap-2 bg-gradient-primary text-primary-foreground hover:opacity-90"
+              >
+                {generatingReport ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <FileText className="h-4 w-4" />
+                )}
+                {generatingReport ? "Generating report…" : "Download PDF Report"}
+              </Button>
               <Button variant="outline" size="sm" onClick={downloadJson} className="gap-2">
-                <Download className="h-4 w-4" /> Download JSON
+                <Download className="h-4 w-4" /> JSON
               </Button>
               <Button
                 variant="outline"
@@ -229,7 +242,7 @@ export default function ExperimentDetail() {
                 onClick={() => window.print()}
                 className="gap-2"
               >
-                <Printer className="h-4 w-4" /> Print / PDF
+                <Printer className="h-4 w-4" /> Print
               </Button>
             </div>
           )}

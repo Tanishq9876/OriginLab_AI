@@ -189,7 +189,7 @@ export default function NewExperiment() {
             {submitting ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Generating with GPT-5 deep reasoning… (~30–90s)
+                Generating with deep reasoning… (~30–90s)
               </>
             ) : (
               <>

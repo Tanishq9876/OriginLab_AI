@@ -1,0 +1,4 @@
+project_id = "nhrjaqjgtavmipotvlhw"
+
+[functions.generate-experiment]
+verify_jwt = true

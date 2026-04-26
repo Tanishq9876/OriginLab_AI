@@ -12,9 +12,11 @@ import {
   Download,
   Printer,
   Calendar,
+  FileText,
 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { generatePdfReport, type CommentForReport, type AiInsights } from "@/lib/report/generatePdfReport";
 
 type ExperimentRow = {
   id: string;
